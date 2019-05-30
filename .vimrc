@@ -1,9 +1,4 @@
-" https://github.com/linode/docs/blob/master/docs/tools-reference/tools/introduction-to-vim-customization/index.md
-" Credit for the foundation of this file to Linode, docs@linode.com. It says CC
-" BY-ND 4.0, but encouraged me to base my .vimrc off their filbase my .vimrc
-" off their file.
-
-" Set compatibility to vim only
+" Set compatibility to vim only, if vi-compatible
 if &compatible
     set nocompatible
 endif
@@ -16,11 +11,20 @@ if exists('*minpac#init')
     call minpac#add('junegunn/fzf', {'do': {-> system('./install --all')}})
     call minpac#add('junegunn/fzf.vim')
     call minpac#add('itchyny/lightline.vim')
+    call minpac#add('scrooloose/nerdtree')
+    call minpac#add('morhetz/gruvbox')
+    "call minpac#add('w0rp/ale')
 endif
 
 "Plugin settings
 "Lightline already shows editing mode
 set noshowmode
+" Lightline has its own colorscheme
+let g:lightline = { 'colorscheme': 'wombat' }
+"Map nerdtree toggle to CTRL-n
+map <C-n> :NERDTreeToggle<CR>
+let g:gruvbox_contrast_dark='hard'
+" somehow italics not working
 
 " Helps force plug-ins to load correctly when it is turned back on below.
 filetype off
@@ -29,7 +33,7 @@ filetype off
 syntax on
 
 " For plug-ins to load correctly.
-"filetype plugin indent on
+filetype plugin indent on
 
 " Turn off modelines
 set modelines=0
@@ -99,6 +103,9 @@ set smartcase
 " data. 'Useful for copying large amounts of data between files.'
 set viminfo='100,<9999,s100
 
+" Auto-fold code
+setlocal foldmethod=syntax
+
 " Map the <Space> key to toggle a selected fold opened/closed.
 nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
 vnoremap <Space> zf
@@ -144,13 +151,17 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
+" 24-bit true-color on many terminals https://gist.github.com/XVilka/8346728
+set termguicolors
+
 " Try to set a color scheme
 try
-    colorscheme desert
+    colorscheme wombat
+    set background=dark
+    "highlight Normal ctermbg=none
 catch
 endtry
 
-set background=dark
 
 " Use Unix end-of-lines as standard
 set ffs=unix,dos,mac
